@@ -14,6 +14,7 @@ namespace BlackJack
         //TODO: public int money;
         public List<Card> Hand = new List<Card>();
         private List<CardDeck> deckList;
+        private Card revealedDealerCard;
 
 
         public Player()
@@ -32,8 +33,9 @@ namespace BlackJack
             Console.Clear();
         }
 
-        public void PlayHand(List<CardDeck> _DeckList)
+        public void PlayHand(List<CardDeck> _DeckList, Card _RevealedDealerCard)
         {
+            revealedDealerCard = _RevealedDealerCard;
             deckList = _DeckList;
             while (IsPlaying)
             {
@@ -55,7 +57,9 @@ namespace BlackJack
         }
         private void AskMove()
         {
-            Console.WriteLine($"Player: {Name} \nCard value: {Convert.ToString(CalculateValue())}");
+            Console.WriteLine($"Dealer Card value: {revealedDealerCard.Number}");
+            Console.WriteLine($"Dealer Card 1: {revealedDealerCard.Color} {(revealedDealerCard.Type == Card.CardType.Nummer ? revealedDealerCard.Number : revealedDealerCard.Type)} \n\n");
+            Console.WriteLine($"Player: {Name} \nCard value: {CalculateValue()}");
             Console.Write(FormatCardToText());
             Console.WriteLine("\n\n");
             Console.WriteLine("Kies een van de volgende opties door ze te tiepen:\n\n");
@@ -78,11 +82,14 @@ namespace BlackJack
                     Console.Clear();
                     Double();
                     break;
+                default:
+                    Console.Clear();
+                    break;
             }
         }
         private void Over21()
         {
-            Console.WriteLine($"Player: {Name} \nCard value: {Convert.ToString(CalculateValue())}");
+            Console.WriteLine($"Player: {Name} \nCard value: {CalculateValue()}");
             Console.Write(FormatCardToText());
             Console.WriteLine("\n\n");
             Console.WriteLine("Helaas over 21! Hit enter om door te gaan.");
@@ -91,7 +98,7 @@ namespace BlackJack
         }
         private void BlackJack()
         {
-            Console.WriteLine($"Player: {Name} \nCard value: {Convert.ToString(CalculateValue())}");
+            Console.WriteLine($"Player: {Name} \nCard value: {CalculateValue()}");
             Console.Write(FormatCardToText());
             Console.WriteLine("\n\n");
             Console.WriteLine("BlackJack!!! Hit enter om door te gaan.");
@@ -107,7 +114,7 @@ namespace BlackJack
         {
             Hand.Add(PullCard(true, deckList));
 
-            Console.WriteLine($"Player: {Name} \nCard value: {Convert.ToString(CalculateValue())}");
+            Console.WriteLine($"Player: {Name} \nCard value: {CalculateValue()}");
             Console.Write(FormatCardToText());
             Console.WriteLine("\n\n\n\n");
             Console.WriteLine("Hit enter om door te gaan.");
@@ -122,11 +129,11 @@ namespace BlackJack
             {
                 if (card.Type == Card.CardType.Nummer)
                 {
-                    text += $"Kaart {i}: {Convert.ToString(card.Color)} {Convert.ToString(card.Number)} \n";
+                    text += $"Kaart {i}: {card.Color} {card.Number} \n";
                 }
                 else
                 {
-                    text += $"Kaart {i}: {Convert.ToString(card.Color)} {Convert.ToString(card.Type)} \n";
+                    text += $"Kaart {i}: {card.Color} {card.Type} \n";
                 }
                 i++;
             }

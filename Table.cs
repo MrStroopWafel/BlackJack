@@ -48,7 +48,7 @@ namespace BlackJack
 
             foreach (Player player in playerList)
             {
-                player.PlayHand(deckList);
+                player.PlayHand(deckList, house.Hand[0]);
             }
 
 
