@@ -10,7 +10,7 @@ namespace BlackJack
     {
         private List<Player> playerList = new List<Player>();
         private List<CardDeck> deckList = new List<CardDeck>();
-        private House house = new House();
+        private House house = new House(0);
 
         public Table(Settings _settings)
         {
@@ -30,7 +30,7 @@ namespace BlackJack
             //loop for the amount of players given and add them to the player list
             for (int i = 0; i < _Settings.Players; i++)
             {
-                playerList.Add(new Player());
+                playerList.Add(new Player(_Settings.Money));
             }
             //loop for the amount of card decks given and add them to the deck list
             for (int i = 0; i < _Settings.Decks; i++)
@@ -44,6 +44,7 @@ namespace BlackJack
         /// </summary>
         private void TableRound()
         {
+            PlaceBets();
             DealCards();
 
             foreach (Player player in playerList)
@@ -51,9 +52,26 @@ namespace BlackJack
                 player.PlayHand(deckList, house.Hand[0]);
             }
 
+            house.HousePlay(deckList);
+            Console.WriteLine($"Dealer: \nValue: {house.CalculateValue()} \n{house.FormatCardToText()}");
+            foreach (Player player in playerList)
+            {
+
+            }
+
 
         }
-
+        private void PlaceBets()
+        {
+            foreach (Player player in playerList)
+            {
+                Console.Clear();
+                Console.Write($"{player.Name} Money: ${player.Money} \nHow much money do you wanna bet? (Awnser in numbers only): ");
+                int tempValue = Int32.Parse(Console.ReadLine());
+                player.Money += tempValue * -1;
+                player.HandMoney = tempValue;
+            }
+        }
         private void DealCards()
         {
             //add 2 starting cards for each player

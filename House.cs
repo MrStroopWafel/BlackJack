@@ -8,13 +8,21 @@ namespace BlackJack
 {
     internal class House : Player
     {
-        public House()
+        public House(int _Money) : base(_Money)
         {
-
         }
+
         protected override void AskName()
         {
             Name = "Dealer";
+        }
+        public void HousePlay(List<CardDeck> _DeckList)
+        {
+            deckList = _DeckList;
+            while (CalculateValue() < 17)
+            {
+                Hit();
+            }
         }
     }
 }

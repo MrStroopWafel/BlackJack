@@ -10,15 +10,15 @@ namespace BlackJack
     {
         public string Name;
         public bool IsPlaying = true;
-        public int value;
-        //TODO: public int money;
+        public int Value, Money, HandMoney;
         public List<Card> Hand = new List<Card>();
-        private List<CardDeck> deckList;
+        protected List<CardDeck> deckList;
         private Card revealedDealerCard;
 
 
-        public Player()
+        public Player(int _Money)
         {
+            Money = _Money;
             AskName();
         }
 
@@ -59,7 +59,7 @@ namespace BlackJack
         {
             Console.WriteLine($"Dealer Card value: {revealedDealerCard.Number}");
             Console.WriteLine($"Dealer Card 1: {revealedDealerCard.Color} {(revealedDealerCard.Type == Card.CardType.Nummer ? revealedDealerCard.Number : revealedDealerCard.Type)} \n\n");
-            Console.WriteLine($"Player: {Name} \nCard value: {CalculateValue()}");
+            Console.WriteLine($"Player: {Name} \nMoney: {Money} \nCard value: {CalculateValue()}");
             Console.Write(FormatCardToText());
             Console.WriteLine("\n\n");
             Console.WriteLine("Kies een van de volgende opties door ze te tiepen:\n\n");
@@ -106,13 +106,15 @@ namespace BlackJack
             Console.Clear();
         }
 
-        private void Hit()
+        protected void Hit()
         {
             Hand.Add(PullCard(true, deckList));
         }
         private void Double()
         {
-            Hand.Add(PullCard(true, deckList));
+            Money += HandMoney * -1;
+            HandMoney += HandMoney;
+            Hit();
 
             Console.WriteLine($"Player: {Name} \nCard value: {CalculateValue()}");
             Console.Write(FormatCardToText());
@@ -143,60 +145,40 @@ namespace BlackJack
         public int CalculateValue()
         {
             bool highAce = false;
-            value = 0;
+            Value = 0;
             foreach (Card card in Hand)
             {
                 if (card.Type == Card.CardType.Aas)
                 {
-                    if (value > 10)
+                    if (Value > 10)
                     {
-                        value += 1;
+                        Value += 1;
                         //turns a 11 point ace into a 1 point ace if the player value goes over 21
-                        if (highAce && value > 21)
+                        if (highAce && Value > 21)
                         {
-                            value += -10;
+                            Value += -10;
                             highAce = false;
                         }
                     }
                     else
                     {
-                        value += card.Number;
+                        Value += card.Number;
                         highAce = true;
                     }
                 }
                 else
                 {
-                    value += card.Number;
+                    Value += card.Number;
                     //turns a 11 point ace into a 1 point ace if the player value goes over 21
-                    if (highAce && value > 21)
+                    if (highAce && Value > 21)
                     {
-                        value += -10;
+                        Value += -10;
                         highAce = false;
                     }
                 }
             }
-            return value;
+            return Value;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         /// <summary>
         /// method to pull a random active card from the card decks
