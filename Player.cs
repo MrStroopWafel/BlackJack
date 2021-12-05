@@ -46,8 +46,9 @@ namespace BlackJack
         }
         public void AskMove()
         {
-            Console.WriteLine($"Player: {Name}");
+            Console.WriteLine($"Player: {Name} \nCard value: {Convert.ToString(CalculateValue())}");
             Console.Write(FormatCardToText());
+            Console.Write("\n");
         }
 
         public string FormatCardToText()
@@ -68,6 +69,60 @@ namespace BlackJack
             }
             return text;
         }
+
+        public int CalculateValue()
+        {
+            bool highAce = false;
+            value = 0;
+            foreach (Card card in Hand)
+            {
+                if (card.Type == Card.CardType.Aas)
+                {
+                    if (value > 10)
+                    {
+                        value += 1;
+                        //turns a 11 point ace into a 1 point ace if the player value goes over 21
+                        if (highAce && value > 21)
+                        {
+                            value += -10;
+                            highAce = false;
+                        }
+                    }
+                    else
+                    {
+                        value += card.Number;
+                        highAce = true;
+                    }
+                }
+                else
+                {
+                    value += card.Number;
+                    //turns a 11 point ace into a 1 point ace if the player value goes over 21
+                    if (highAce && value > 21)
+                    {
+                        value += -10;
+                        highAce = false;
+                    }
+                }
+            }
+            return value;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
