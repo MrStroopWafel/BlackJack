@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 namespace BlackJack
 {
-    internal class House 
+    internal class House : Player
     {
         public House()
         {
 
+        }
+        protected override void AskName()
+        {
+            Name = "Dealer";
         }
     }
 }

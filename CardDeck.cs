@@ -28,10 +28,5 @@ namespace BlackJack
                 Deck.Add(new Card(Convert.ToInt32(card[0]), Convert.ToString(card[1]), Convert.ToString(card[2])));
             }
         }
-
-
-
-
-
     }
 }

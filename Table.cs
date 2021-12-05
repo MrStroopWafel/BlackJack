@@ -45,66 +45,40 @@ namespace BlackJack
         private void TableRound()
         {
             DealCards();
+
+            foreach (Player player in playerList)
+            {
+                player.PlayHand();
+            }
+
+
+
+
+
+
+            /*
+            foreach (Player player in playerList)
+            {
+                Console.WriteLine(player.Name);
+                Console.WriteLine(player.Hand[0].Number + " " + player.Hand[0].Type + " " + player.Hand[0].Color);
+                Console.WriteLine(player.Hand[1].Number + " " + player.Hand[1].Type + " " + player.Hand[1].Color);
+                Console.WriteLine("\n");
+            }
+            */
         }
 
         private void DealCards()
         {
+            //add 2 starting cards for each player
             foreach (Player player in playerList)
             {
-                player.Hand.Add(PullCard());
-                player.Hand.Add(PullCard());
-                Console.WriteLine(player.Hand[0].Number + " " + player.Hand[0].Type);
-                Console.WriteLine(player.Hand[1].Number + " " + player.Hand[0].Type);
+                player.Hand.Add(player.PullCard(true, deckList));
+                player.Hand.Add(player.PullCard(true, deckList));
             }
+            //add 2 starting cards for the house, false paramater is for hidden card
+            house.Hand.Add(house.PullCard(true, deckList));
+            house.Hand.Add(house.PullCard(false, deckList));
         }
-        /// <summary>
-        /// method to randomly pull a active card from the card decks
-        /// </summary>
-        /// <returns>card object</returns>
-        private Card PullCard()
-        {
-            Random rnd = new Random();
-            int activeCards = 0;
-            int activeCardsIndex = 0;
-            //card to return if the program fails
-            Card failCard = new Card(99, "Harte", "Aas");
-            //loop through the list to get individual decks
-            foreach (CardDeck deck in deckList)
-            {
-                //loop through the deck list to get all the individual cards; then check the status;
-                foreach (Card card in deck.Deck)
-                {
-                    if (card.Status)
-                    {
-                        activeCards++;
-                    }
-                }
-            }
-            //generate randum number based on the amount of active cards
-            int randomIndex = rnd.Next(0, activeCards);
-
-            //loop through the decks; pulls card out of the list based on the index of the active cards, not all cards;
-            foreach (CardDeck deck in deckList)
-            {
-                //loop through the deck list to get all the individual cards; then check the status;
-                foreach (Card card in deck.Deck)
-                {
-                    if (card.Status)
-                    {
-                        if (activeCardsIndex == randomIndex)
-                        {
-                            return card;
-                        }
-                        activeCardsIndex++;
-                    }
-                }
-            }
-            //this shouldn't be executed;
-            return failCard;
-
-        }
-
-
 
     }
 }
