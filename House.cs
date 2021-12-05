@@ -11,7 +11,9 @@ namespace BlackJack
         public House(int _Money) : base(_Money)
         {
         }
-
+        /// <summary>
+        /// method to override the askName method of the Player class and change the name to "Dealer'
+        /// </summary>
         protected override void AskName()
         {
             Name = "Dealer";

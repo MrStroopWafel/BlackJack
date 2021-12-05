@@ -10,7 +10,7 @@ namespace BlackJack
     {
         public int Players, Decks, Money;
 
-        //TODO: Settings for burning cards; Settings for money
+        //TODO: Settings for burning cards;
         public Settings()
         {
             AskPlayerAmount();
@@ -30,13 +30,15 @@ namespace BlackJack
         /// <summary>
         /// asks how many card decks to use
         /// </summary>
-        /// <returns>user intput card deck amount<int></returns>
         private void AskDeckAmount()
         {
             Console.Write("How many decks do you want to play with? (Awnser in numbers only): ");
             Decks = Int32.Parse(Console.ReadLine());
             Console.Clear();
         }
+        /// <summary>
+        /// askes input for the amount of money to play with
+        /// </summary>
         private void AskMoneyAmount()
         {
             Console.Write("How many $ would you like each player to have? (Awnser in numbers only): ");

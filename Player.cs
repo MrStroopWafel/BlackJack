@@ -23,7 +23,7 @@ namespace BlackJack
         }
 
         /// <summary>
-        /// Function to ask the created players name
+        /// Method to ask the created players name
         /// </summary>
         /// <returns>player name<string></returns>
         protected virtual void AskName()
@@ -33,6 +33,12 @@ namespace BlackJack
             Console.Clear();
         }
 
+        /// <summary>
+        /// Method that loops till the play has made all moves
+        /// the method checks for blackjack (21); if the payer goes over 21;
+        /// </summary>
+        /// <param name="_DeckList">the decklist is given so Hit() can pull a card from the deck</param>
+        /// <param name="_RevealedDealerCard">revealed dealer card is given to display on screen (console)</param>
         public void PlayHand(List<CardDeck> _DeckList, Card _RevealedDealerCard)
         {
             revealedDealerCard = _RevealedDealerCard;
@@ -55,11 +61,15 @@ namespace BlackJack
                 }
             }
         }
+        /// <summary>
+        /// method asks for input, this can be: Hit; Stand; Double;
+        /// and runs those functions
+        /// </summary>
         private void AskMove()
         {
             Console.WriteLine($"Dealer Card value: {revealedDealerCard.Number}");
             Console.WriteLine($"Dealer Card 1: {revealedDealerCard.Color} {(revealedDealerCard.Type == Card.CardType.Nummer ? revealedDealerCard.Number : revealedDealerCard.Type)} \n\n");
-            Console.WriteLine($"Player: {Name} \nMoney: {Money} \nCard value: {CalculateValue()}");
+            Console.WriteLine($"Player: {Name} \nMoney: {Money} \nBetted money: {HandMoney} \nCard value: {CalculateValue()}");
             Console.Write(FormatCardToText());
             Console.WriteLine("\n\n");
             Console.WriteLine("Kies een van de volgende opties door ze te tiepen:\n\n");
@@ -87,6 +97,9 @@ namespace BlackJack
                     break;
             }
         }
+        /// <summary>
+        /// method to display text on screen when the players goes over 21 
+        /// </summary>
         private void Over21()
         {
             Console.WriteLine($"Player: {Name} \nCard value: {CalculateValue()}");
@@ -96,6 +109,9 @@ namespace BlackJack
             Console.ReadLine();
             Console.Clear();
         }
+        /// <summary>
+        /// method to display text on screen when the player gets blackjack (21)
+        /// </summary>
         private void BlackJack()
         {
             Console.WriteLine($"Player: {Name} \nCard value: {CalculateValue()}");
@@ -105,11 +121,16 @@ namespace BlackJack
             Console.ReadLine();
             Console.Clear();
         }
-
+        /// <summary>
+        /// method to add a card to the player hand
+        /// </summary>
         protected void Hit()
         {
             Hand.Add(PullCard(true, deckList));
         }
+        /// <summary>
+        /// method to double a players bet, and to give him 1 extra card though the Hit() method
+        /// </summary>
         private void Double()
         {
             Money += HandMoney * -1;
@@ -123,6 +144,10 @@ namespace BlackJack
             Console.ReadLine();
             Console.Clear();
         }
+        /// <summary>
+        /// Formats the card list into a printable string 
+        /// </summary>
+        /// <returns>player hand in string from for displaying on screen</returns>
         public string FormatCardToText()
         {
             string text = "";
@@ -141,7 +166,11 @@ namespace BlackJack
             }
             return text;
         }
-
+        /// <summary>
+        /// calculates the value of cards in a players hand
+        /// can change the value of a ace if the value of the hand is over 10 or 21
+        /// </summary>
+        /// <returns>the value of the cards in the players hands</returns>
         public int CalculateValue()
         {
             bool highAce = false;
@@ -150,6 +179,7 @@ namespace BlackJack
             {
                 if (card.Type == Card.CardType.Aas)
                 {
+                    //if the hand value is over 10, the added ace needs to be counted as a 1
                     if (Value > 10)
                     {
                         Value += 1;
