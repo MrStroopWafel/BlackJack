@@ -15,10 +15,10 @@ namespace BlackJack
         public Table(Settings _settings)
         {
             TableInit(_settings);
-            //while (true)
-            //{
-            TableRound();
-            //}
+            while (true)
+            {
+                TableRound();
+            }
 
         }
         /// <summary>
@@ -54,31 +54,37 @@ namespace BlackJack
 
             house.HousePlay(deckList);
 
-            Console.WriteLine($"Dealer: \nCard value: {house.CalculateValue()} \n{house.FormatCardToText()}\n\n");
+            Console.WriteLine($"Dealer: \nCard value: {house.CalculateValue()} \n{house.FormatCardToText()}\n");
             //loops though the players to show cards bets and money earned
             foreach (Player player in playerList)
             {
-                Console.WriteLine($"Player: {player.Name} \nMoney: {player.Money} \nBetted money: {player.HandMoney} \nCard value: {player.CalculateValue()}  \n{player.FormatCardToText()}\n");
+                Console.WriteLine($"Player: {player.Name} \nMoney: {player.Money} \nBetted money: {player.HandMoney} \nCard value: {player.CalculateValue()}  \n{player.FormatCardToText()}");
                 //checks if the player has higher cards then the dealer
                 if (player.CalculateValue() > house.CalculateValue() && player.CalculateValue() < 22)
                 {
                     //checks for blackjack and gives this higher payout
                     if (player.CalculateValue() == 21)
                     {
-                        Console.WriteLine($"{player.Name} heeft {Convert.ToInt32(player.HandMoney * 2)} gewonnen!\n\n");
+                        Console.WriteLine($"{player.Name} heeft {Convert.ToInt32(player.HandMoney * 2)} gewonnen!\n");
                         player.Money += Convert.ToInt32(player.HandMoney * 2);
                     }
                     else
                     {
-                        Console.WriteLine($"{player.Name} heeft {Convert.ToInt32(player.HandMoney * 1.5)} gewonnen!\n\n");
+                        Console.WriteLine($"{player.Name} heeft {Convert.ToInt32(player.HandMoney * 1.5)} gewonnen!\n");
                         player.Money += Convert.ToInt32(player.HandMoney * 1.5);
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"{player.Name} heeft {Convert.ToInt32(player.HandMoney)} verloren.\n\n");
+                    Console.WriteLine($"{player.Name} heeft {Convert.ToInt32(player.HandMoney)} verloren.\n");
                 }
             }
+
+            Console.Write("Hit enter to continue");
+            Console.ReadLine();
+
+
+
         }
         /// <summary>
         /// method to ask players input to ask bets
