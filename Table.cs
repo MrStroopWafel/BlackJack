@@ -24,16 +24,16 @@ namespace BlackJack
         /// <summary>
         /// function to initialize the table
         /// </summary>
-        /// <param name="_settings"></param>
-        private void TableInit(Settings _settings)
+        /// <param name="_Settings"></param>
+        private void TableInit(Settings _Settings)
         {
             //loop for the amount of players given and add them to the player list
-            for (int i = 0; i < _settings.Players; i++)
+            for (int i = 0; i < _Settings.Players; i++)
             {
                 playerList.Add(new Player());
             }
             //loop for the amount of card decks given and add them to the deck list
-            for (int i = 0; i < _settings.Decks; i++)
+            for (int i = 0; i < _Settings.Decks; i++)
             {
                 deckList.Add(new CardDeck());
             }
@@ -48,23 +48,10 @@ namespace BlackJack
 
             foreach (Player player in playerList)
             {
-                player.PlayHand();
+                player.PlayHand(deckList);
             }
 
 
-
-
-
-
-            /*
-            foreach (Player player in playerList)
-            {
-                Console.WriteLine(player.Name);
-                Console.WriteLine(player.Hand[0].Number + " " + player.Hand[0].Type + " " + player.Hand[0].Color);
-                Console.WriteLine(player.Hand[1].Number + " " + player.Hand[1].Type + " " + player.Hand[1].Color);
-                Console.WriteLine("\n");
-            }
-            */
         }
 
         private void DealCards()

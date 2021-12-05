@@ -13,12 +13,14 @@ namespace BlackJack
         public int value;
         //TODO: public int money;
         public List<Card> Hand = new List<Card>();
+        private List<CardDeck> deckList;
 
 
         public Player()
         {
             AskName();
         }
+
         /// <summary>
         /// Function to ask the created players name
         /// </summary>
@@ -30,27 +32,88 @@ namespace BlackJack
             Console.Clear();
         }
 
-
-
-
-
-
-
-        public void PlayHand()
+        public void PlayHand(List<CardDeck> _DeckList)
         {
+            deckList = _DeckList;
             while (IsPlaying)
             {
-                AskMove();
-                IsPlaying = false;
+                switch (CalculateValue())
+                {
+                    case 21:
+                        BlackJack();
+                        IsPlaying = false;
+                        break;
+                    case > 21:
+                        Over21();
+                        IsPlaying = false;
+                        break;
+                    default:
+                        AskMove();
+                        break;
+                }
             }
         }
-        public void AskMove()
+        private void AskMove()
         {
             Console.WriteLine($"Player: {Name} \nCard value: {Convert.ToString(CalculateValue())}");
             Console.Write(FormatCardToText());
-            Console.Write("\n");
+            Console.WriteLine("\n\n");
+            Console.WriteLine("Kies een van de volgende opties door ze te tiepen:\n\n");
+            Console.WriteLine("Hit");
+            Console.WriteLine("Stand");
+            Console.WriteLine("Double\n");
+
+            switch (Console.ReadLine())
+            {
+                case "Hit":
+                    Console.Clear();
+                    Hit();
+                    break;
+                case "Stand":
+                    IsPlaying = false;
+                    Console.Clear();
+                    break;
+                case "Double":
+                    IsPlaying = false;
+                    Console.Clear();
+                    Double();
+                    break;
+            }
+        }
+        private void Over21()
+        {
+            Console.WriteLine($"Player: {Name} \nCard value: {Convert.ToString(CalculateValue())}");
+            Console.Write(FormatCardToText());
+            Console.WriteLine("\n\n");
+            Console.WriteLine("Helaas over 21! Hit enter om door te gaan.");
+            Console.ReadLine();
+            Console.Clear();
+        }
+        private void BlackJack()
+        {
+            Console.WriteLine($"Player: {Name} \nCard value: {Convert.ToString(CalculateValue())}");
+            Console.Write(FormatCardToText());
+            Console.WriteLine("\n\n");
+            Console.WriteLine("BlackJack!!! Hit enter om door te gaan.");
+            Console.ReadLine();
+            Console.Clear();
         }
 
+        private void Hit()
+        {
+            Hand.Add(PullCard(true, deckList));
+        }
+        private void Double()
+        {
+            Hand.Add(PullCard(true, deckList));
+
+            Console.WriteLine($"Player: {Name} \nCard value: {Convert.ToString(CalculateValue())}");
+            Console.Write(FormatCardToText());
+            Console.WriteLine("\n\n\n\n");
+            Console.WriteLine("Hit enter om door te gaan.");
+            Console.ReadLine();
+            Console.Clear();
+        }
         public string FormatCardToText()
         {
             string text = "";
