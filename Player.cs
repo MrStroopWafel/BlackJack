@@ -209,7 +209,6 @@ namespace BlackJack
             }
             return Value;
         }
-
         /// <summary>
         /// method to pull a random active card from the card decks
         /// </summary>

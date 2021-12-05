@@ -38,7 +38,6 @@ namespace BlackJack
                 deckList.Add(new CardDeck());
             }
         }
-
         /// <summary>
         /// the method that runs every round
         /// </summary>
@@ -82,9 +81,6 @@ namespace BlackJack
 
             Console.Write("Hit enter to continue");
             Console.ReadLine();
-
-
-
         }
         /// <summary>
         /// method to ask players input to ask bets
