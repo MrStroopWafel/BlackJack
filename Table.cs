@@ -15,12 +15,9 @@ namespace BlackJack
         public Table(Settings _settings)
         {
             TableInit(_settings);
-            while (true)
-            {
-                TableRound();
-            }
-
+            TableRound();
         }
+
         /// <summary>
         /// function to initialize the table
         /// </summary>
@@ -38,49 +35,36 @@ namespace BlackJack
                 deckList.Add(new CardDeck());
             }
         }
+        
         /// <summary>
         /// the method that runs every round
         /// </summary>
         private void TableRound()
         {
-            PlaceBets();
-            DealCards();
-
-            foreach (Player player in playerList)
+            //INFINITE LOOP TILL WIN AND LOSE CONDITIONS ARE ADDED                     <------------------------------------------------------------------
+            while (true)
             {
-                player.PlayHand(deckList, house.Hand[0]);
-            }
+                PlaceBets();
+                DealCards();
 
-            house.HousePlay(deckList);
-
-            Console.WriteLine($"Dealer: \nCard value: {house.CalculateValue()} \n{house.FormatCardToText()}\n");
-            //loops though the players to show cards bets and money earned
-            foreach (Player player in playerList)
-            {
-                Console.WriteLine($"Player: {player.Name} \nMoney: {player.Money} \nBetted money: {player.HandMoney} \nCard value: {player.CalculateValue()}  \n{player.FormatCardToText()}");
-                //checks if the player has higher cards then the dealer
-                if (player.CalculateValue() > house.CalculateValue() && player.CalculateValue() < 22)
+                foreach (Player player in playerList)
                 {
-                    //checks for blackjack and gives this higher payout
-                    if (player.CalculateValue() == 21)
-                    {
-                        Console.WriteLine($"{player.Name} heeft {Convert.ToInt32(player.HandMoney * 2)} gewonnen!\n");
-                        player.Money += Convert.ToInt32(player.HandMoney * 2);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{player.Name} heeft {Convert.ToInt32(player.HandMoney * 1.5)} gewonnen!\n");
-                        player.Money += Convert.ToInt32(player.HandMoney * 1.5);
-                    }
+                    player.PlayHand(deckList, house.Hand[0]);
                 }
-                else
-                {
-                    Console.WriteLine($"{player.Name} heeft {Convert.ToInt32(player.HandMoney)} verloren.\n");
-                }
-            }
 
-            Console.Write("Hit enter to continue");
-            Console.ReadLine();
+                house.HousePlay(deckList);
+
+                Console.WriteLine($"Dealer: \nCard value: {house.CalculateValue()} \n{house.Hand[0].FormatCardToText(house.Hand)}\n");
+                //loops though the players to show cards bets and money earned
+                foreach (Player player in playerList)
+                {
+                    Console.WriteLine($"Player: {player.Name} \nMoney: {player.Money} \nBetted money: {player.HandMoney} \nCard value: {player.CalculateValue()}  \n{player.Hand[0].FormatCardToText(player.Hand)}");
+                    Console.WriteLine(CheckWin(player));
+                }
+                ClearHand();
+                Console.Write("Hit enter to continue");
+                Console.ReadLine();
+            }
         }
         /// <summary>
         /// method to ask players input to ask bets
@@ -105,13 +89,84 @@ namespace BlackJack
             //add 2 starting cards for each player
             foreach (Player player in playerList)
             {
-                player.Hand.Add(player.PullCard(true, deckList));
-                player.Hand.Add(player.PullCard(true, deckList));
+                for (int i = 0; i < 2; i++)
+                {
+                    //pulls a temp card
+                    Card tempCard = deckList[0].PullCard(deckList);
+                    //checks if its a fail card
+                    if (tempCard.Number != 9999)
+                    {
+                        player.Hand.Add(tempCard);
+                    }
+                    else //failcard; means something went wrong or deck needs to be shuffled
+                    {
+                        deckList[0].Shuffle(deckList);
+                        player.Hand.Add(tempCard);
+                    }
+                }
             }
-            //add 2 starting cards for the house, false paramater is for hidden card
-            house.Hand.Add(house.PullCard(true, deckList));
-            house.Hand.Add(house.PullCard(false, deckList));
+            //add 2 starting cards for the house
+            for (int i = 0; i < 2; i++)
+            {
+                //pulls a temp card
+                Card tempCard = deckList[0].PullCard(deckList);
+                //checks if its a fail card
+                if (tempCard.Number != 9999)
+                {
+                    house.Hand.Add(tempCard);
+                }
+                else //failcard; means something went wrong or deck needs to be shuffled
+                {
+                    deckList[0].Shuffle(deckList);
+                    house.Hand.Add(tempCard);
+                }
+            }
         }
 
+        private void ClearHand()
+        {
+            foreach (Player player in playerList)
+            {
+                player.Hand.Clear();
+            }
+            house.Hand.Clear();
+        }
+
+        private string CheckWin(Player _player)
+        {
+            //check if player is under 21 and 
+            if (_player.CalculateValue() < 21)
+            {
+                //check if dealer is under 21 
+                if (house.CalculateValue() < 21)
+                {
+                    //checks if the player has higher cards then the dealer
+                    if (_player.CalculateValue() > house.CalculateValue())
+                    {
+                        //checks for blackjack and gives this higher payout
+                        if (_player.CalculateValue() == 21)
+                        {
+                            _player.Money += Convert.ToInt32(_player.HandMoney * 2);
+                            return $"{_player.Name} heeft {Convert.ToInt32(_player.HandMoney * 2)} gewonnen!\n";
+                        } else //(_player.CalculateValue() != 21)
+                        {
+                            _player.Money += Convert.ToInt32(_player.HandMoney * 1.5);
+                            return $"{_player.Name} heeft {Convert.ToInt32(_player.HandMoney * 1.5)} gewonnen!\n";
+                        }
+                    } else //(_player.CalculateValue() < house.CalculateValue())
+                    {
+                        return $"{_player.Name} heeft {Convert.ToInt32(_player.HandMoney)} verloren.\n";
+                    }
+                } else //(house.CalculateValue() > 21)
+                {
+                    _player.Money += Convert.ToInt32(_player.HandMoney * 1.5);
+                    return $"{_player.Name} heeft {Convert.ToInt32(_player.HandMoney * 2)} gewonnen!\n";
+                }
+            } else //(_player.CalculateValue() > 21)
+            {
+                return $"{_player.Name} heeft {Convert.ToInt32(_player.HandMoney)} verloren.\n";
+            }  
+        }
+        
     }
 }

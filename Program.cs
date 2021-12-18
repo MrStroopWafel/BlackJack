@@ -8,6 +8,7 @@ namespace BlackJack
         {
             Settings settings = new Settings();
             Table table = new Table(settings);
+            Console.ReadKey();
         }
     }
 }

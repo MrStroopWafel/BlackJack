@@ -70,5 +70,27 @@ namespace BlackJack
                     break;
             }
         }
+        /// <summary>
+        /// Formats the card list into a printable string 
+        /// </summary>
+        /// <returns>player hand in string from for displaying on screen</returns>
+        public string FormatCardToText(List<Card> _Hand)
+        {
+            string text = "";
+            int i = 1;
+            foreach (Card card in _Hand)
+            {
+                if (card.Type == Card.CardType.Nummer)
+                {
+                    text += $"Kaart {i}: {card.Color} {card.Number} \n";
+                }
+                else
+                {
+                    text += $"Kaart {i}: {card.Color} {card.Type} \n";
+                }
+                i++;
+            }
+            return text;
+        }
     }
 }
